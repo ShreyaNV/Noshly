@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { useRouter } from 'next/router';
-import { calculateDistance } from '../utils/distance'; // Import the utility function
+import { calculateDistance } from '../utils/distance';
+import Header from '@/components/Consumer-Header';
+import Footer from '@/components/Footer';
 
 export default function ConsumerDashboard() {
   const [user, setUser] = useState(null);
@@ -12,11 +14,10 @@ export default function ConsumerDashboard() {
     const fetchUserAndListings = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/login'); // Redirect to login if not authenticated
+        router.push('/login');
       } else {
         setUser(user);
 
-        // Fetch consumer's profile
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('latitude, longitude')
@@ -25,50 +26,41 @@ export default function ConsumerDashboard() {
 
         if (profileError) {
           console.error('Error fetching profile:', profileError);
+          return;
+        }
+
+        const { data: listings, error: listingsError } = await supabase
+          .from('food_listings')
+          .select('*');
+
+        if (listingsError) {
+          console.error('Error fetching listings:', listingsError);
         } else {
-          // Fetch all food listings
-          const { data: listings, error: listingsError } = await supabase
-            .from('food_listings')
-            .select('*');
+          const nearbyListings = await Promise.all(
+            listings.map(async (listing) => {
+              const { data: sellerProfile, error: sellerProfileError } = await supabase
+                .from('profiles')
+                .select('latitude, longitude')
+                .eq('user_id', listing.seller_id)
+                .single();
 
-          if (listingsError) {
-            console.error('Error fetching listings:', listingsError);
-          } else {
-            // Filter listings within 10 km
-            const nearbyListings = await Promise.all(
-              listings.map(async (listing) => {
-                // Fetch seller's profile to get their location
-                const { data: sellerProfile, error: sellerProfileError } = await supabase
-                  .from('profiles')
-                  .select('latitude, longitude')
-                  .eq('user_id', listing.seller_id)
-                  .single();
+              if (sellerProfileError) {
+                console.error('Error fetching seller profile:', sellerProfileError);
+                return null;
+              }
 
-                if (sellerProfileError) {
-                  console.error('Error fetching seller profile:', sellerProfileError);
-                  return null;
-                }
+              const distance = calculateDistance(
+                profile.latitude,
+                profile.longitude,
+                sellerProfile.latitude,
+                sellerProfile.longitude
+              );
 
-                // Calculate distance between consumer and seller
-                const distance = calculateDistance(
-                  profile.latitude,
-                  profile.longitude,
-                  sellerProfile.latitude,
-                  sellerProfile.longitude
-                );
+              return listing;
+            })
+          );
 
-                // Return the listing if it's within 10 km
-                if (distance <= 10) {
-                  return listing;
-                } else {
-                  return null;
-                }
-              })
-            );
-
-            // Filter out null values (listings outside the 10 km radius)
-            setFoodListings(nearbyListings.filter((listing) => listing !== null));
-          }
+          setFoodListings(nearbyListings.filter(Boolean));
         }
       }
     };
@@ -76,29 +68,36 @@ export default function ConsumerDashboard() {
     fetchUserAndListings();
   }, [router]);
 
-  if (!user) {
-    return <p>Loading...</p>;
-  }
+  if (!user) return <p className="text-center mt-10">Loading...</p>;
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <h1 className="text-2xl font-bold mb-6">Consumer Dashboard</h1>
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Available Food Listings</h2>
-        <ul>
+    <div className="min-h-screen flex flex-col bg-yellow-100">
+      <Header />
+
+      <div className="flex-grow px-4 py-6">
+        <h2 className="text-2xl font-bold mb-6 text-center">All Available Listings in the Area:</h2>
+        <div className="space-y-6">
           {foodListings.map((listing) => (
-            <li key={listing.id} className="mb-4 p-4 border rounded">
-              <p><strong>{listing.name}</strong> - {listing.quantity} units</p>
-              <button
-                onClick={() => handleRequestListing(listing.id)}
-                className="mt-2 bg-green-500 text-white p-1 rounded hover:bg-green-600"
-              >
-                Request
-              </button>
-            </li>
+            <div key={listing.id} className="bg-red-200 shadow-lg rounded-2xl p-6">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-xl font-semibold">{listing.restaurant_name || 'Restaurant/Org Name'}</h3>
+                <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm">
+                  ⭐ {listing.rating ?? 'N/A'}
+                </span>
+              </div>
+              <p className="text-lg"><strong>Dish:</strong> {listing.dish_name || 'N/A'}</p>
+              <p><strong>Serves:</strong> {listing.quantity ?? 'N/A'} people</p>
+              <p><strong>Dietary:</strong> {listing.dietary_info || 'Not specified'}</p>
+            </div>
           ))}
-        </ul>
+
+          {foodListings.length === 0 && (
+            <p className="text-center text-gray-600">No listings available within 10 km.</p>
+          )}
+        </div>
       </div>
+
+      <Footer className="mt-auto" />
     </div>
   );
 }
