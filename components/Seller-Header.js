@@ -41,7 +41,7 @@ export default function Header() {
               <Link href="#footer" className="hover:underline">Contact Us</Link>
             </li>
             <li className="mx-2">
-              <Link href="/help" className="hover:underline">Help</Link>
+              <Link href="https://forms.gle/YkyaFLeZzA2BQCTi6" className="hover:underline">Help</Link>
             </li>
             {user ? (
               <li
