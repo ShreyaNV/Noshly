@@ -53,7 +53,7 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
             <ul className="text-sm text-gray-300">
               <li className="mb-2">
-                <a href="mailto:support@noshly.com" className="hover:underline">support@noshly.com</a>
+                <a href="mailto:noshlyhelp@gmail.com" className="hover:underline">noshlyhelp@gmail.com</a>
               </li>
               <li className="mb-2">
                 <a href="tel:+1234567890" className="hover:underline">+1 (234) 567-890</a>

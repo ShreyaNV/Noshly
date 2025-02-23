@@ -14,14 +14,14 @@ export default function Header() {
         <Link href="/">
           <div className="flex items-center mb-4">
             <Image
-              src="/logo-actual.png" // Replace with your logo path
+              src="/logo-actual.png"
               alt="Noshly Logo"
               width={100}
               height={100}
               className="object-contain"
             />
             <Image
-              src="/logo-actual1.png" // Replace with your logo path
+              src="/logo-actual1.png"
               alt="Noshly Logo"
               width={175}
               height={175}

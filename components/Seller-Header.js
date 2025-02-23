@@ -11,7 +11,7 @@ export default function Header() {
     <header className="p-4 text-white" style={{ backgroundColor: '#C3C079' }}>
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/">
-          <div className="flex items-center mb-4">
+          <div className="flex items-center mb-2">
             <Image
               src="/logo-actual.png" // Replace with your logo path
               alt="Noshly Logo"

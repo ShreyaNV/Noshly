@@ -10,28 +10,28 @@ export default function Hero() {
   const steps = [
     {
       key: 1,
-      icon: '📝',
-      title: "Step 1",
-      description: "Create your profile and get verified to start using Noshly.",
+      icon: '🍽️',
+      title: "Step 1 : List Surplus Food",
+      description: "Restaurants and individuals can easily upload surplus food on the website by adding details like the dish name, description, and how many people it can serve. This ensures food banks and organizations know exactly what’s available.",
     },
     {
       key: 2,
-      icon: '🛒',
-      title: "Step 2",
-      description: "Consumers can browse available food items and contact suppliers.",
+      icon: '🔍',
+      title: "Step 2 : Food Connect ",
+      description: "Registered food banks, NGOs, and community organizations can browse real-time listings of available food donations in their area. The platform helps them find meals that match their needs, making the process quick and efficient.",
     },
     {
       key: 3,
-      icon: '🍎',
-      title: "Step 3",
-      description: "Suppliers can add food items by entering necessary details.",
+      icon: '📦',
+      title: "Step 3 : Easy Pickup",
+      description: "Once an organization finds a suitable donation, they can directly contact the donor through the platform and arrange a convenient pickup time. This ensures fresh food gets to those in need without delays or wastage.",
     },
     {
       key: 4,
-      icon: '📦',
-      title: "Step 4",
-      description: "When the consume orders food, both the parties will get each other detials and get the food delivered to needy.",
-    },
+      icon: '🎉',
+      title: "Step 4 : Rewards for Giving ",
+      description: "To encourage continued donations, restaurants and individuals earn badges, points, and recognition for their contributions. These rewards can help build trust, social impact, and even boost brand visibility for businesses that consistently give back.",
+    }
   ];
 
   return (
@@ -71,8 +71,10 @@ export default function Hero() {
             <div className="flex items-center">
               <div className="w-1/2 flex justify-end pr-4">
                 <div className="bg-red-200 p-4 rounded-lg shadow-md w-64 text-center">
-                  <h4 className="font-bold mb-2">Why?</h4>
-                  <p className="text-gray-700">Globally, around 1.3 billion tons of food is wasted every year—roughly 3.5 million tons daily—which could feed over 2 billion people every day. 🌍🍽️ 
+                  <h4 className="font-bold mb-2">Stats</h4>
+                  <p className="text-gray-700">One-third of all food is wasted—1.3 billion tons yearly—costing nearly $1 trillion while 828 million people go hungry.
+                     If food waste were a country, it’d be the third-largest polluter. In India alone, 68 million tons are wasted, while millions go hungry everyday. 
+                    About 4-10% of food in restaurants is wasted per day and supermarkets throw away 43 billion pounds of food annually.
                   </p>
                 </div>
               </div>
@@ -83,8 +85,9 @@ export default function Hero() {
               <div className="w-1/2"></div>
               <div className="w-1/2 flex justify-start pl-4">
                 <div className="bg-orange-200 p-4 rounded-lg shadow-md w-64 text-center">
-                  <h4 className="font-bold mb-2">What you can do</h4>
-                  <p className="text-gray-700">You can make an impact by reducing food waste.</p>
+                  <h4 className="font-bold mb-2">Why It Matters</h4>
+                  <p className="text-gray-700">Food waste isn’t just about lost meals—it’s a major global crisis. Wasting food means wasting water, energy, and labor, while millions struggle with hunger. 
+                    It also fuels climate change, producing methane, a gas 25x more harmful than CO₂. Reducing waste isn’t just necessary—it’s urgent for people and the planet.</p>
                 </div>
               </div>
             </div>
@@ -92,8 +95,9 @@ export default function Hero() {
             <div className="flex items-center">
               <div className="w-1/2 flex justify-end pr-4">
                 <div className="bg-yellow-200 p-4 rounded-lg shadow-md w-64 text-center">
-                  <h4 className="font-bold mb-2">How</h4>
-                  <p className="text-gray-700">Post your food details, and we'll instantly notify nearby consumers and NGOs to ensure it reaches those in need.</p>
+                  <h4 className="font-bold mb-2">Our Goals</h4>
+                  <p className="text-gray-700">We aim to rescue surplus food and redirect it to those in need, reducing waste and hunger at the same time. 
+                    By connecting restaurants, supermarkets, and food banks, we strive for a sustainable system that minimizes environmental harm, supports communities, and ensures no food goes to waste.</p>
                 </div>
               </div>
               <div className="w-1/2"></div>

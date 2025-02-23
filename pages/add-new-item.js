@@ -129,7 +129,7 @@ export default function SellerDashboard() {
                 <label className="block text-sm font-medium mb-2">Item Name</label>
                 <input
                   type="text"
-                  style={{ backgroundColor: '#F49B8D' }}
+                  style={{ backgroundColor: '#C3C079' }}
                   value={newListing.dishName}
                   onChange={(e) => setNewListing({ ...newListing, dishName: e.target.value })}
                   className="w-full p-2 border rounded"
@@ -142,7 +142,7 @@ export default function SellerDashboard() {
                 <label className="block text-sm font-medium mb-2">Description</label>
                 <textarea
                   value={newListing.description}
-                  style={{ backgroundColor: '#F49B8D' }}
+                  style={{ backgroundColor: '#C3C079' }}
                   onChange={(e) => setNewListing({ ...newListing, description: e.target.value })}
                   className="w-full p-2 border rounded"
                   rows={3}
@@ -155,7 +155,7 @@ export default function SellerDashboard() {
                 <label className="block text-sm font-medium mb-2">Serves</label>
                 <input
                   type="number"
-                  style={{ backgroundColor: '#F49B8D' }}
+                  style={{ backgroundColor: '#C3C079' }}
                   value={newListing.serves}
                   onChange={(e) => setNewListing({ ...newListing, serves: e.target.value })}
                   className="w-full p-2 border rounded"
@@ -169,7 +169,7 @@ export default function SellerDashboard() {
                 <label className="block text-sm font-medium mb-2">Storage</label>
                 <input
                   type="text"
-                  style={{ backgroundColor: '#F49B8D' }}
+                  style={{ backgroundColor: '#C3C079' }}
                   value={newListing.storage}
                   onChange={(e) => setNewListing({ ...newListing, storage: e.target.value })}
                   className="w-full p-2 border rounded"
@@ -207,10 +207,10 @@ export default function SellerDashboard() {
 
               {/* Time Until Pickup */}
               <div>
-                <label className="block text-sm font-medium mb-2">Time Until Pickup</label>
+                <label className="block text-sm font-medium mb-2">Time Until Pickup (in hr Only)</label>
                 <input
                   type="text"
-                  style={{ backgroundColor: '#F49B8D' }}
+                  style={{ backgroundColor: '#C3C079' }}
                   value={newListing.timeUntilPickup}
                   onChange={(e) => setNewListing({ ...newListing, timeUntilPickup: e.target.value })}
                   className="w-full p-2 border rounded"

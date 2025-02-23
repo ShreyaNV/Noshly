@@ -8,9 +8,12 @@ import Footer from '@/components/Footer';
 export default function ConsumerDashboard() {
   const [user, setUser] = useState(null);
   const [foodListings, setFoodListings] = useState([]);
+  const [expandedListingId, setExpandedListingId] = useState(null);
+  const [timers, setTimers] = useState({});
   const router = useRouter();
 
   useEffect(() => {
+     
     const fetchUserAndListings = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -36,6 +39,7 @@ export default function ConsumerDashboard() {
         if (listingsError) {
           console.error('Error fetching listings:', listingsError);
         } else {
+          console.log(listings);
           const nearbyListings = await Promise.all(
             listings.map(async (listing) => {
               const { data: sellerProfile, error: sellerProfileError } = await supabase
@@ -49,7 +53,7 @@ export default function ConsumerDashboard() {
                 return null;
               }
 
-              const distance = calculateDistance(
+              calculateDistance(
                 profile.latitude,
                 profile.longitude,
                 sellerProfile.latitude,
@@ -68,6 +72,43 @@ export default function ConsumerDashboard() {
     fetchUserAndListings();
   }, [router]);
 
+  useEffect(() => {
+    const intervalIds = {};
+  
+    foodListings.forEach((listing) => {
+      let totalSeconds = (listing.timeUntilPickup || 0) * 3600; // Convert hours to seconds
+  
+      // Initialize the timer with the total seconds
+      setTimers((prev) => ({
+        ...prev,
+        [listing.id]: totalSeconds,
+      }));
+  
+      intervalIds[listing.id] = setInterval(() => {
+        totalSeconds -= 1;
+  
+        if (totalSeconds <= 0) {
+          clearInterval(intervalIds[listing.id]);
+          totalSeconds = 0; // Prevent negative values
+        }
+  
+        setTimers((prev) => ({
+          ...prev,
+          [listing.id]: totalSeconds,
+        }));
+      }, 1000);
+    });
+  
+    return () => {
+      Object.values(intervalIds).forEach(clearInterval); // Cleanup on unmount
+    };
+  }, [foodListings]);
+  
+
+  const toggleExpand = (id) => {
+    setExpandedListingId(expandedListingId === id ? null : id);
+  };
+
   if (!user) return <p className="text-center mt-10">Loading...</p>;
 
   return (
@@ -80,14 +121,33 @@ export default function ConsumerDashboard() {
           {foodListings.map((listing) => (
             <div key={listing.id} className="bg-red-200 shadow-lg rounded-2xl p-6">
               <div className="flex justify-between items-center mb-2">
-                <h3 className="text-xl font-semibold">{listing.restaurant_name || 'Restaurant/Org Name'}</h3>
-                <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm">
-                  ⭐ {listing.rating ?? 'N/A'}
-                </span>
+                <h3 className="text-xl font-semibold flex items-center">
+                  {listing.dishName || 'N/A'}
+                  <span className="ml-3 text-sm bg-blue-500 text-white px-2 py-1 rounded-full">
+                    {timers[listing.id] || listing.timeUntilPickup || 'N/A'}
+                  </span>
+                </h3>
+                <button
+                  onClick={() => toggleExpand(listing.id)}
+                  className="bg-gray-700 text-white px-4 py-1 rounded-xl hover:bg-gray-600"
+                >
+                  {expandedListingId === listing.id ? 'Hide Details' : 'Show Details'}
+                </button>
               </div>
-              <p className="text-lg"><strong>Dish:</strong> {listing.dish_name || 'N/A'}</p>
-              <p><strong>Serves:</strong> {listing.quantity ?? 'N/A'} people</p>
-              <p><strong>Dietary:</strong> {listing.dietary_info || 'Not specified'}</p>
+
+              {expandedListingId === listing.id && (
+                <div className="mt-4 space-y-2 bg-red-100 p-4 rounded-lg">
+                  <p><strong>Description:</strong> {listing.description || 'No description'}</p>
+                  <p><strong>Serves:</strong> {listing.serves ?? 'N/A'} people</p>
+                  <p><strong>Dietary:</strong> {listing.dietaryGuidelines || 'Not specified'}</p>
+                  <p><strong>Storage:</strong> {listing.storage || 'No info'}</p>
+
+                  <div className="flex justify-end space-x-4 mt-4">
+                    <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Proceed</button>
+                    <button onClick={() => toggleExpand(listing.id)} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Close</button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
 
